@@ -8,12 +8,20 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import cluster from 'cluster';
 import http from 'http';
+import axios from 'axios'
 
 import config from './common/config';
 const log = require('./common/log')(module);
+import api from './api';
 
+// ****************** Import routes *************
+
+import groups from './routes/groups';
+
+//***********************************************
 
 const dev = true;
+
 
 const app = express();
 
@@ -89,9 +97,9 @@ if (dev ? false : cluster.isMaster) {
 
     //******************************** Routes ***************************
 
+    app.use('/api/groups', groups);
 
     app.get('/*', (req, res) => {
-        // req.session.destroy();
         res.sendFile(path.join(__dirname, 'index.html'))
     });
 

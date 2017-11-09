@@ -4,14 +4,15 @@ const path = require('path');
 
 module.exports = {
 
-    entry: [
-        path.join(__dirname, 'client/index.js')
-    ],
+    entry: {
+        bundle: path.join(__dirname, 'client/index.js'),
+        server: path.join(__dirname, 'server/index.js')
+    },
 
     output: {
         path: path.join(__dirname, 'public/'),
         publicPath:  '/',
-        filename: 'bundle.js'
+        filename: '[name].js'
     },
 
     module: {
@@ -92,7 +93,6 @@ module.exports = {
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.ProvidePlugin({
             'React': 'react',
-            "createReactClass": "create-react-class",
             "PropTypes": "prop-types"
         })
     ],
