@@ -14,7 +14,7 @@ function getLogger(module) {
                 label: pathName
             }),
             new (winston.transports.File)({
-                filename: path.join(__dirname, '../', 'node.log'),
+                filename: path.join(__dirname, 'node.log'),
                 label: pathName
             })
         ]

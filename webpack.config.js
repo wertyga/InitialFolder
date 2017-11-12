@@ -5,8 +5,7 @@ const path = require('path');
 module.exports = {
 
     entry: {
-        bundle: path.join(__dirname, 'client/index.js'),
-        server: path.join(__dirname, 'server/index.js')
+        bundle: path.join(__dirname, 'client/index.js')
     },
 
     output: {

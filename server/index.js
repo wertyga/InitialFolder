@@ -1,26 +1,20 @@
 import express from 'express';
-import webpack from 'webpack';
-import webpackConfig from '../webpack.dev.config';
-import webpackHotMiddleware from 'webpack-hot-middleware';
-import webpackMiddleware from 'webpack-dev-middleware';
 import bodyParser from 'body-parser';
 
 import path from 'path';
 import cluster from 'cluster';
 import http from 'http';
-import axios from 'axios'
 
 import config from './common/config';
 const log = require('./common/log')(module);
-import api from './api';
+
 
 // ****************** Import routes *************
 
-import groups from './routes/groups';
 
 //***********************************************
 
-const dev = true;
+const dev = process.env.NODE_ENV.trim() === 'development';
 
 
 const app = express();
@@ -45,6 +39,10 @@ if (dev ? false : cluster.isMaster) {
 
     //****************** Webpack ********************
     if(dev) {
+        const webpack = require('webpack');
+        const webpackConfig = require('../webpack.dev.config');
+        const webpackHotMiddleware = require('webpack-hot-middleware');
+        const webpackMiddleware = require('webpack-dev-middleware');
 
         const compiler = webpack(webpackConfig);
 
@@ -60,7 +58,7 @@ if (dev ? false : cluster.isMaster) {
 
     app.use(bodyParser.json());
     // app.use(cookieParser());
-    // if(!dev) app.use(express.static(path.join(__dirname, '../', 'public')));
+    if(!dev) app.use(express.static(path.join(__dirname, '../', 'production/client/static')));
     // app.use(express.static(path.join(__dirname, config.uploads.directory)));
     // app.use(session({
     //     secret: config.session.secret,
@@ -96,8 +94,6 @@ if (dev ? false : cluster.isMaster) {
     //************************************************************
 
     //******************************** Routes ***************************
-
-    app.use('/api/groups', groups);
 
     app.get('/*', (req, res) => {
         res.sendFile(path.join(__dirname, 'index.html'))

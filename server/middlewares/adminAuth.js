@@ -1,5 +1,3 @@
-
-
 export default function(req, res, next) {
    if(req.session.isAdmin) {
        next();
