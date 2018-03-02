@@ -1,6 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
 
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
 
 module.exports = {
 
@@ -9,7 +11,7 @@ module.exports = {
     },
 
     output: {
-        path: path.join(__dirname, 'public/'),
+        path: path.join(__dirname, 'production/client/static'),
         publicPath:  '/',
         filename: '[name].js'
     },
@@ -88,6 +90,7 @@ module.exports = {
     },
 
     plugins: [
+        new BundleAnalyzerPlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.ProvidePlugin({

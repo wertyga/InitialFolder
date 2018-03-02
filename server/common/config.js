@@ -1,9 +1,11 @@
 import path from 'path';
 
+const env = process.env.NODE_ENV;
+
 export default {
     PORT: 3000,
     mongoose: {
-        uri: 'mongodb://localhost/admin',
+        uri: env.trim() === 'test' ? 'mongodb://localhost/hqo-test' : 'mongodb://localhost/hqo',
         options: {
             server: {
                 socketOptions: {
@@ -16,6 +18,8 @@ export default {
         secret: "nodeJSForever",
         key: "sid",
         cookie: {
+            secure: false,
+            sameSite: true,
             httpOnly: true,
             maxAge: 3600000
         }
@@ -25,7 +29,7 @@ export default {
         salt: 10
     },
     uploads: {
-        directory: 'productsImages',
-        destination: path.join(__dirname, '../', 'productsImages')
+        directory: 'temp',
+        destination: path.join(__dirname, '../', 'temp')
     }
 }
