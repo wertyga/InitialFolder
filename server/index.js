@@ -14,16 +14,15 @@ import session from 'express-session';
 
 
 //***********************************************
-const env = process.env.NODE_ENV;
-const dev = env ? env.trim() === 'development' : false;
-const test = env ? env.trim() === 'test' : false;
-const prod = env ? env.trim() === 'production' : false;
+const dev = process.env.NODE_ENV === 'development';
+const test = process.env.NODE_ENV === 'test';
+const prod = process.env.NODE_ENV === 'production';
 
 
 export const app = express();
 export const server = http.createServer(app);
 
-if (!prod ? false : cluster.isMaster) {
+if(prod && cluster.isMaster) {
 
     let cpuCount = require('os').cpus().length;
 
@@ -41,7 +40,6 @@ if (!prod ? false : cluster.isMaster) {
 
     // Для работы с garbage collector запустите проект с параметрами:
     // node --nouse-idle-notification --expose-gc app.js
-    if(prod) {
         let gcInterval;
 
         function init() {
@@ -57,12 +55,16 @@ if (!prod ? false : cluster.isMaster) {
         };
 
         init();
-    }
 
     //************************************************************
 
 
 } else {
+    //******************************** Run server ***************************
+
+    server.listen(config.PORT, () => console.log(`Server run on ${config.PORT} port`));
+
+    // *******************************************************************
 
     //****************** Webpack ********************
     if (dev) {
@@ -98,15 +100,32 @@ if (!prod ? false : cluster.isMaster) {
 
 
     //******************************** Routes ***************************
-
-    app.get('/*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'index.html'))
+    app.get('/error', (req, res) => {
+        log.error('ASDASD');
+        require('fs').readFile(__dirname + '/common/node.log', 'utf8', (err, data) => {
+            res.json(data)
+        });
     });
 
+    app.get('/*', (req, res) => {
+        // res.sendFile(path.join(__dirname, 'index.html'))
 
-    //******************************** Run server ***************************
-
-    server.listen(config.PORT, () => console.log(`Server run on ${config.PORT} port`));
+        res.send(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Title</title>
+            </head>
+            <body>
+            
+                <div id="app"></div>
+            
+                <script src="/bundle.js"></script>
+            </body>
+            </html>
+        `);
+    });
 
 //******************************** Uncaught Exception ***************************
 

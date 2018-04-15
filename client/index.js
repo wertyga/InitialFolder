@@ -10,12 +10,21 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from './reducers/rootReducer';
 import './styles/index.sass';
 
-const store = createStore(
-    rootReducer,
-    composeWithDevTools(
+let store;
+const dev = process.env.NODE_ENV === 'development';
+if(dev) {
+    store = createStore(
+        rootReducer,
+        composeWithDevTools(
+            applyMiddleware(thunk)
+        )
+    );
+} else {
+    store = createStore(
+        rootReducer,
         applyMiddleware(thunk)
-    )
-);
+    );
+};
 
 ReactDOM.render (
     <BrowserRouter>

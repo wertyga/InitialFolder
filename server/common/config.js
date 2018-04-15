@@ -1,11 +1,12 @@
 import path from 'path';
 
 const env = process.env.NODE_ENV;
+const dbName = 'Some_dbName';
 
 export default {
     PORT: 3000,
     mongoose: {
-        uri: env.trim() === 'test' ? 'mongodb://localhost/hqo-test' : 'mongodb://localhost/hqo',
+        uri: env === 'test' ? `mongodb://localhost/${dbName}-test` : `mongodb://localhost/${dbName}`,
         options: {
             server: {
                 socketOptions: {

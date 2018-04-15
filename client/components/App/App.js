@@ -1,19 +1,25 @@
-import { Route, Switch } from 'react-router-dom';
-
-import NotFoundPage from '../404/404';
-import MainComponent from '../MainComponent/MainComponent';
+import axios from 'axios';
 
 import './App.sass';
 
 class App extends React.Component {
+    constructor() {
+        super();
+
+        this.state = {
+            res: ''
+        };
+    };
+    error = () => {
+        axios.get('/error')
+            .then(res => this.setState({ res: res.data }))
+    };
     render() {
         return (
             <div className="App">
-                <Switch>
-                    <Route exact path="/" component={MainComponent}/>
-                    
-                    <Route component={NotFoundPage} />
-                </Switch>
+                <h1>App</h1>
+                <button onClick={this.error}>Throw Err to log</button>
+                <div>Response: <div>{this.state.res}</div></div>
             </div>
         );
     }

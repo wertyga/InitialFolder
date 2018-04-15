@@ -45,6 +45,9 @@ module.exports =  {
         new webpack.ProvidePlugin({
             'React': 'react',
             "PropTypes":"prop-types",
+        }),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         })
     ],
 
