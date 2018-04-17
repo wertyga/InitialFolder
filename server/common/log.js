@@ -3,7 +3,6 @@ import path from 'path';
 import winston from 'winston';
 
 function getLogger(module) {
-
     let pathName = module.filename.split('/').slice(-2).join('/');
 
     return new winston.Logger({

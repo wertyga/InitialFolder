@@ -6,7 +6,7 @@
   "scripts": {
     "test-jest": "cross-env NODE_ENV=test jest --watchAll --env=jsdom",
     "start:dev": "cross-env NODE_ENV=development nodemon --watch server --exec babel-node -- server/index.js",
-    "build": "cross-env NODE_ENV=production webpack -p",
+    "build": "cross-env NODE_ENV=production webpack -p && babel server --out-dir production/server",
     "start:prod": "cross-env NODE_ENV=production node --nouse-idle-notification --expose-gc production/server/index.js"
   },
   "author": "",
