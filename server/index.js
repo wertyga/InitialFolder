@@ -36,55 +36,58 @@ if(prod && cluster.isMaster) {
         cluster.fork();
     });
 
-    //************************* GARBAGE magic ***********************************
-
-    // Для работы с garbage collector запустите проект с параметрами:
-    // node --nouse-idle-notification --expose-gc app.js
-        let gcInterval;
-
-        function init() {
-            gcInterval = setInterval(function () {
-                gcDo();
-            }, 60000);
-        };
-
-        function gcDo() {
-            global.gc();
-            clearInterval(gcInterval);
-            init();
-        };
-
-        init();
-
-    //************************************************************
-
-
 } else {
     //******************************** Run server ***************************
 
     server.listen(config.PORT, () => console.log(`Server run on ${config.PORT} port`));
 
     // *******************************************************************
-
-    //****************** Webpack ********************
-    if (dev) {
-        const webpack = require('webpack');
-        const webpackConfig = require('../webpack.dev.config');
-        const webpackHotMiddleware = require('webpack-hot-middleware');
-        const webpackMiddleware = require('webpack-dev-middleware');
-
-        const compiler = webpack(webpackConfig);
-
-        app.use(webpackMiddleware(compiler, {
-            hot: true,
-            publicPath: webpackConfig.output.publicPath,
-            noInfo: true
-        }));
-        app.use(webpackHotMiddleware(compiler));
-    }
 };
 
-    //**********************************************
+
+//****************** Webpack ********************
+if (dev) {
+    const webpack = require('webpack');
+    const webpackConfig = require('../webpack.dev.config');
+    const webpackHotMiddleware = require('webpack-hot-middleware');
+    const webpackMiddleware = require('webpack-dev-middleware');
+
+    const compiler = webpack(webpackConfig);
+
+    app.use(webpackMiddleware(compiler, {
+        hot: true,
+        publicPath: webpackConfig.output.publicPath,
+        noInfo: true
+    }));
+    app.use(webpackHotMiddleware(compiler));
+}
+
+//**********************************************
+
+if(prod) {
+
+    //************************* GARBAGE magic ***********************************
+
+    // Для работы с garbage collector запустите проект с параметрами:
+    // node --nouse-idle-notification --expose-gc app.js
+    let gcInterval;
+
+    function init() {
+        gcInterval = setInterval(function () {
+            gcDo();
+        }, 60000);
+    };
+
+    function gcDo() {
+        global.gc();
+        clearInterval(gcInterval);
+        init();
+    };
+
+    init();
+
+    //************************************************************
+}
 
     app.use(bodyParser.json());
     if(!dev) app.use(express.static(path.join(__dirname, '..', 'client', 'static')));
